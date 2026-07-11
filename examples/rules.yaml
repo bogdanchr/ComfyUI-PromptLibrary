@@ -1,0 +1,21 @@
+# Copy this file into a category folder and rename/edit it as rules.yaml.
+entries:
+  pirate ship:
+    requires:
+      - ocean
+      - gentle waves
+    optional:
+      - seagulls: 30
+    exclude:
+      - spaceship
+
+files:
+  03_temat.txt:
+    requires:
+      - simple background
+
+category:
+  exclude:
+    - photorealistic
+  replace:
+    boat: pirate ship

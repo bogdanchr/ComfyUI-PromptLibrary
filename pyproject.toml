@@ -1,0 +1,10 @@
+[project]
+name = "comfyui-promptlibrary"
+version = "0.10.0"
+description = "Prompt library, builder, Prompt Doctor and utilities for ComfyUI"
+requires-python = ">=3.10"
+dependencies = ["PyYAML>=6.0"]
+
+[tool.pytest.ini_options]
+pythonpath = [".", "src"]
+testpaths = ["tests"]
