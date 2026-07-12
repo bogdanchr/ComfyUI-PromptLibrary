@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-
+from .statistics import PromptLengthStatistics
 
 @dataclass(slots=True)
 class SimulationResult:
@@ -11,6 +11,10 @@ class SimulationResult:
 
     prompts: list[str] = field(default_factory=list)
     duplicate_items: dict[str, int] = field(default_factory=dict)
+    
+    length_statistics: PromptLengthStatistics = field(
+    default_factory=PromptLengthStatistics
+    )
 
     coverage: dict[str, float] = field(default_factory=dict)
     unused_entries: dict[str, list[str]] = field(default_factory=dict)

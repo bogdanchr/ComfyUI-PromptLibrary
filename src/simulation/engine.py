@@ -2,6 +2,7 @@ from ..prompt_library.core.engine import LibraryEngine
 
 from .result import SimulationResult
 
+from .statistics import calculate_prompt_length_statistics
 
 class SimulationEngine:
     """Generuje wiele promptów przy użyciu tego samego silnika co Prompt Library."""
@@ -51,5 +52,6 @@ class SimulationEngine:
         result.duplicate_prompts = result.total_prompts - result.unique_prompts
         result.prompts = prompts
         result.duplicate_items = duplicate_items
+        result.length_statistics = calculate_prompt_length_statistics(prompts)
 
         return result
