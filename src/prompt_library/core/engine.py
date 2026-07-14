@@ -9,7 +9,15 @@ class LibraryEngine:
     def __init__(self, root_folder):
         self.repository = PromptLibraryRepository(root_folder)
 
-    def build(self, category, mode, seed, index, separator):
+    def build(
+        self,
+        category,
+        mode,
+        seed,
+        index,
+        separator,
+        selected_parts_out=None,
+    ):
         info = self.repository.category(category)
         sep = parse_separator(separator)
         debug = [
@@ -32,16 +40,36 @@ class LibraryEngine:
 
         selected_parts = []
         errors = []
+
         for position, path in enumerate(info.prompt_files):
             prompt_file = self.repository.load_prompt_file(path, False)
             try:
-                result = PromptSelector.select(prompt_file, mode, seed, index, position * 10007)
-                selected_parts.append(PromptPart(prompt_file.label, result.text, path.name))
-                debug.append(f"{prompt_file.label}: {result.text} [{result.index + 1}/{result.count}]")
+                result = PromptSelector.select(
+                    prompt_file,
+                    mode,
+                    seed,
+                    index,
+                    position * 10007,
+                )
+                selected_parts.append(
+                    PromptPart(
+                        prompt_file.label,
+                        result.text,
+                        path.name,
+                    )
+                )
+                debug.append(
+                    f"{prompt_file.label}: "
+                    f"{result.text} "
+                    f"[{result.index + 1}/{result.count}]"
+                )
             except ValueError as exc:
                 error = f"{prompt_file.label}: ERROR — {exc}"
                 errors.append(error)
                 debug.append(error)
+
+        if selected_parts_out is not None:
+            selected_parts_out.extend(selected_parts)
 
         def optional_text(path):
             if not path:
