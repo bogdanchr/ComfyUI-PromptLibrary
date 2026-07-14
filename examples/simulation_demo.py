@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from src.prompt_library.simulation.engine import SimulationEngine
-from src.prompt_library.simulation.report import build_simulation_report
+from prompt_library.simulation.engine import SimulationEngine
+from prompt_library.simulation.report import build_simulation_report
 
 
 LIBRARY_ROOT = Path(r"D:\PromptLibrary\Kolorowanki")

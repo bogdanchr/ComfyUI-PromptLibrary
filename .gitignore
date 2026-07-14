@@ -10,3 +10,5 @@ venv/
 Thumbs.db
 data/state/*.json
 !data/state/.gitkeep
+simulation_report.txt
+*.egg-info/
