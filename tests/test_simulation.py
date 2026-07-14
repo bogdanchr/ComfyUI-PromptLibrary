@@ -79,3 +79,43 @@ def test_simulation_result_has_empty_category_coverage_by_default():
     assert engine_result.category_coverage.used_entries == 0
     assert engine_result.category_coverage.coverage_percent == 0.0
     assert engine_result.category_coverage.files == {}
+def test_simulation_calculates_category_coverage(tmp_path):
+    category = tmp_path / "TEST"
+    category.mkdir()
+
+    (category / "01_character.txt").write_text(
+        "cute\nbrave\n",
+        encoding="utf-8",
+    )
+    (category / "02_typ_postaci.txt").write_text(
+        "little boy\nlittle girl\n",
+        encoding="utf-8",
+    )
+
+    engine = SimulationEngine(str(tmp_path))
+
+    result = engine.simulate(
+        category="TEST",
+        count=2,
+        mode="sequential",
+        seed=0,
+        index=0,
+    )
+
+    assert result.category_coverage.total_entries == 4
+    assert result.category_coverage.used_entries == 4
+    assert result.category_coverage.coverage_percent == 100.0
+    assert result.category_coverage.unused_entries == {}
+
+    assert (
+        result.category_coverage.files[
+            "01_character.txt"
+        ].coverage_percent
+        == 100.0
+    )
+    assert (
+        result.category_coverage.files[
+            "02_typ_postaci.txt"
+        ].coverage_percent
+        == 100.0
+    )

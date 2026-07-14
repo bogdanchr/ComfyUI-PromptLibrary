@@ -4,6 +4,9 @@ from .result import SimulationResult
 
 from .statistics import calculate_prompt_length_statistics
 
+from .coverage import calculate_category_coverage
+
+
 class SimulationEngine:
     """Generuje wiele promptów przy użyciu tego samego silnika co Prompt Library."""
 
@@ -24,16 +27,44 @@ class SimulationEngine:
         if count <= 0:
             return result
 
+        category_info = self.library_engine.repository.category(category)
+
+        available_by_file: dict[str, list[str]] = {}
+        used_by_file: dict[str, list[str]] = {}
+
+        for path in category_info.prompt_files:
+            prompt_file = self.library_engine.repository.load_prompt_file(
+                path,
+                False,
+            )
+
+            if prompt_file.error:
+                continue
+
+            available_by_file[path.name] = [
+                entry.text for entry in prompt_file.entries
+            ]
+            used_by_file[path.name] = []
+
         prompts: list[str] = []
 
         for offset in range(count):
+            selected_parts = []
+
             positive, _, _, _, _ = self.library_engine.build(
                 category=category,
                 mode=mode,
                 seed=seed + offset,
                 index=index + offset,
                 separator=separator,
+                selected_parts_out=selected_parts,
             )
+
+            for part in selected_parts:
+                if part.filename:
+                    used_by_file.setdefault(part.filename, []).append(
+                        part.text
+                    )
             prompts.append(positive)
 
         counts: dict[str, int] = {}
@@ -53,5 +84,9 @@ class SimulationEngine:
         result.prompts = prompts
         result.duplicate_items = duplicate_items
         result.length_statistics = calculate_prompt_length_statistics(prompts)
-
+        result.category_coverage = calculate_category_coverage(
+            available_by_file=available_by_file,
+            used_by_file=used_by_file,
+        )
+        
         return result
