@@ -1,4 +1,4 @@
-from src.simulation.coverage import (
+from src.prompt_library.simulation.coverage import (
     FileCoverage,
     calculate_file_coverage,
     CategoryCoverage,

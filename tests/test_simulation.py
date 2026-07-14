@@ -1,8 +1,8 @@
 from unittest import result
 
-from src.simulation.engine import SimulationEngine
+from src.prompt_library.simulation.engine import SimulationEngine
 
-from src.simulation.result import SimulationResult
+from src.prompt_library.simulation.result import SimulationResult
 
 def test_simulation_generates_requested_number_of_prompts(tmp_path):
     category = tmp_path / "TEST"

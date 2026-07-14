@@ -1,10 +1,10 @@
-from src.simulation.coverage import (
+from src.prompt_library.simulation.coverage import (
     CategoryCoverage,
     FileCoverage,
 )
-from src.simulation.report import build_simulation_report
-from src.simulation.result import SimulationResult
-from src.simulation.statistics import PromptLengthStatistics
+from src.prompt_library.simulation.report import build_simulation_report
+from src.prompt_library.simulation.result import SimulationResult
+from src.prompt_library.simulation.statistics import PromptLengthStatistics
 
 
 def test_build_simulation_report():

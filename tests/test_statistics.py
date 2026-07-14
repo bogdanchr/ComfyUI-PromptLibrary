@@ -1,4 +1,4 @@
-from src.simulation.statistics import (
+from src.prompt_library.simulation.statistics import (
     PromptLengthStatistics,
     calculate_prompt_length_statistics,
 )

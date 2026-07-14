@@ -1,4 +1,4 @@
-from ..prompt_library.core.engine import LibraryEngine
+from ..core.engine import LibraryEngine
 
 from .result import SimulationResult
 
