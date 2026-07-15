@@ -1,10 +1,13 @@
+from src.prompt_library.simulation import report
 from src.prompt_library.simulation.coverage import (
     CategoryCoverage,
     FileCoverage,
 )
+from src.prompt_library.simulation.fingerprint import LibraryFingerprint
 from src.prompt_library.simulation.report import build_simulation_report
 from src.prompt_library.simulation.result import SimulationResult
 from src.prompt_library.simulation.statistics import PromptLengthStatistics
+from prompt_library.simulation.fingerprint import LibraryFingerprint
 
 
 def test_build_simulation_report():
@@ -36,6 +39,14 @@ def test_build_simulation_report():
                 "01_character.txt": ("brave",),
             },
         ),
+        library_fingerprint=LibraryFingerprint(
+            files_count=2,
+            total_entries=7,
+            possible_combinations=12,
+            average_entries_per_file=3.5,
+            smallest_file_size=3,
+            largest_file_size=4,
+        ),
     )
 
     report = build_simulation_report(result)
@@ -48,3 +59,7 @@ def test_build_simulation_report():
     assert "Coverage: 75.00%" in report
     assert "01_character.txt: 3/4 (75.00%)" in report
     assert "  - brave" in report
+    assert "Prompt files: 2" in report
+    assert "Total entries: 7" in report
+    assert "Possible combinations: 12" in report
+    assert "Average entries per file: 3.5" in report

@@ -30,6 +30,23 @@ def build_simulation_report(result: SimulationResult) -> str:
         f"Coverage: "
         f"{result.category_coverage.coverage_percent:.2f}%",
     ]
+    
+    fingerprint = result.library_fingerprint
+    lines.extend(
+        [
+            "",
+            "LIBRARY FINGERPRINT",
+            "────────────────────────────",
+            f"Prompt files: {fingerprint.files_count}",
+            f"Total entries: {fingerprint.total_entries}",
+            f"Possible combinations: "
+            f"{fingerprint.possible_combinations:,}",
+            f"Average entries per file: "
+            f"{fingerprint.average_entries_per_file}",
+            f"Smallest file: {fingerprint.smallest_file_size}",
+            f"Largest file: {fingerprint.largest_file_size}",
+        ]
+    )
 
     if result.category_coverage.files:
         lines.extend(

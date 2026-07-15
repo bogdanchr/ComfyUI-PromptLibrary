@@ -27,7 +27,7 @@ class PromptLibraryRepository:
         )
 
     @staticmethod
-    def prompt_files(category_path) -> List[Path]:
+    def prompt_files(category_path)     -> List[Path]:
         path = Path(category_path)
         if not path.is_dir():
             return []

@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from .statistics import PromptLengthStatistics
 from .coverage import CategoryCoverage
-
+from .fingerprint import LibraryFingerprint
 
 @dataclass(slots=True)
 class SimulationResult:
@@ -20,7 +20,11 @@ class SimulationResult:
 
     category_coverage: CategoryCoverage = field(
     default_factory=CategoryCoverage
-)
+    )
+
+    library_fingerprint: LibraryFingerprint = field(
+    default_factory=LibraryFingerprint
+    )
 
     coverage: dict[str, float] = field(default_factory=dict)
     unused_entries: dict[str, list[str]] = field(default_factory=dict)
