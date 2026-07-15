@@ -63,3 +63,5 @@ def test_build_simulation_report():
     assert "Total entries: 7" in report
     assert "Possible combinations: 12" in report
     assert "Average entries per file: 3.5" in report
+    assert "Search space covered:" in report
+    assert "Search space covered: 66.666667%" in report

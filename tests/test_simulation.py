@@ -1,8 +1,7 @@
 from unittest import result
-
 from src.prompt_library.simulation.engine import SimulationEngine
-
 from src.prompt_library.simulation.result import SimulationResult
+from prompt_library.simulation.fingerprint import LibraryFingerprint
 
 def test_simulation_generates_requested_number_of_prompts(tmp_path):
     category = tmp_path / "TEST"
@@ -119,3 +118,17 @@ def test_simulation_calculates_category_coverage(tmp_path):
         ].coverage_percent
         == 100.0
     )
+def test_search_space_coverage_percent():
+    result = SimulationResult(
+        total_prompts=10,
+        unique_prompts=8,
+        library_fingerprint=LibraryFingerprint(
+            possible_combinations=100,
+        ),
+    )
+
+    assert result.search_space_coverage_percent == 8.0
+def test_search_space_coverage_percent_for_empty_space():
+    result = SimulationResult()
+
+    assert result.search_space_coverage_percent == 0.0

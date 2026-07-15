@@ -41,6 +41,8 @@ def build_simulation_report(result: SimulationResult) -> str:
             f"Total entries: {fingerprint.total_entries}",
             f"Possible combinations: "
             f"{fingerprint.possible_combinations:,}",
+            f"Search space covered: "
+            f"{result.search_space_coverage_percent:.6f}%",
             f"Average entries per file: "
             f"{fingerprint.average_entries_per_file}",
             f"Smallest file: {fingerprint.smallest_file_size}",

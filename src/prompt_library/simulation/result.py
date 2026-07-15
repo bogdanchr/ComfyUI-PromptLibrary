@@ -50,3 +50,16 @@ class SimulationResult:
             self.duplicate_prompts / self.total_prompts * 100,
             2,
         )
+    @property
+    def search_space_coverage_percent(self) -> float:
+        """Procent całej przestrzeni kombinacji pokryty przez symulację."""
+
+        possible = self.library_fingerprint.possible_combinations
+
+        if possible <= 0:
+            return 0.0
+
+        return round(
+        self.unique_prompts / possible * 100,
+        6,
+    )
