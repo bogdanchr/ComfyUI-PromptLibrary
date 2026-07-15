@@ -69,6 +69,23 @@ def build_simulation_report(result: SimulationResult) -> str:
                 f"({file_coverage.coverage_percent:.2f}%)"
             )
 
+    if result.entry_usage.usage_by_file:
+        lines.extend(
+            [
+                "",
+                "MOST USED ENTRIES",
+                "────────────────────────────",
+            ]
+        )
+
+        for filename, entry_counts in (
+            result.entry_usage.usage_by_file.items()
+        ):
+            lines.append(filename)
+
+        for entry, count in list(entry_counts.items())[:3]:
+            lines.append(f"  {entry}: {count}")
+
     if result.category_coverage.unused_entries:
         lines.extend(
             [

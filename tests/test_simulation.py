@@ -118,6 +118,21 @@ def test_simulation_calculates_category_coverage(tmp_path):
         ].coverage_percent
         == 100.0
     )
+
+    assert result.entry_usage.total_selections == 4
+
+    assert sum(
+        result.entry_usage.usage_by_file[
+            "01_character.txt"
+        ].values()
+    ) == 2
+
+    assert sum(
+        result.entry_usage.usage_by_file[
+            "02_typ_postaci.txt"
+        ].values()
+    ) == 2
+
 def test_search_space_coverage_percent():
     result = SimulationResult(
         total_prompts=10,

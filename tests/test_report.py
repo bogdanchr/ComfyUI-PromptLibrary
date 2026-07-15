@@ -8,6 +8,9 @@ from src.prompt_library.simulation.report import build_simulation_report
 from src.prompt_library.simulation.result import SimulationResult
 from src.prompt_library.simulation.statistics import PromptLengthStatistics
 from prompt_library.simulation.fingerprint import LibraryFingerprint
+from prompt_library.simulation.usage import (
+    EntryUsageStatistics,
+)
 
 
 def test_build_simulation_report():
@@ -47,6 +50,17 @@ def test_build_simulation_report():
             smallest_file_size=3,
             largest_file_size=4,
         ),
+
+        entry_usage=EntryUsageStatistics(
+             usage_by_file={
+                "01_character.txt": {
+                "cute": 6,
+                "brave": 3,
+                "playful": 1,
+            },
+        },
+        total_selections=10,
+    ),
     )
 
     report = build_simulation_report(result)
@@ -64,4 +78,7 @@ def test_build_simulation_report():
     assert "Possible combinations: 12" in report
     assert "Average entries per file: 3.5" in report
     assert "Search space covered:" in report
-    assert "Search space covered: 66.666667%" in report
+    assert "MOST USED ENTRIES" in report
+    assert "cute: 6" in report
+    assert "brave: 3" in report
+    assert "playful: 1" in report

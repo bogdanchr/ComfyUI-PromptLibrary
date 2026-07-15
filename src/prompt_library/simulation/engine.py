@@ -1,13 +1,9 @@
 from ..core.engine import LibraryEngine
-
 from .result import SimulationResult
-
 from .statistics import calculate_prompt_length_statistics
-
 from .coverage import calculate_category_coverage
-
 from .fingerprint import calculate_library_fingerprint
-
+from .usage import calculate_entry_usage
 class SimulationEngine:
     """Generuje wiele promptów przy użyciu tego samego silnika co Prompt Library."""
 
@@ -91,7 +87,9 @@ class SimulationEngine:
         )
         
         result.library_fingerprint = calculate_library_fingerprint(
-    available_by_file
-    )
-    
+            entries_by_file=available_by_file
+        )
+
+        result.entry_usage = calculate_entry_usage(used_by_file)
+
         return result

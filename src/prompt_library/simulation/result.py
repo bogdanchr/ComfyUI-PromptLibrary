@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from .statistics import PromptLengthStatistics
 from .coverage import CategoryCoverage
 from .fingerprint import LibraryFingerprint
+from .usage import EntryUsageStatistics
 
 @dataclass(slots=True)
 class SimulationResult:
@@ -26,6 +27,10 @@ class SimulationResult:
     default_factory=LibraryFingerprint
     )
 
+    entry_usage: EntryUsageStatistics = field(
+    default_factory=EntryUsageStatistics
+    )
+    
     coverage: dict[str, float] = field(default_factory=dict)
     unused_entries: dict[str, list[str]] = field(default_factory=dict)
 
