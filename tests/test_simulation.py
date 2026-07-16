@@ -1,7 +1,7 @@
-from unittest import result
-from src.prompt_library.simulation.engine import SimulationEngine
-from src.prompt_library.simulation.result import SimulationResult
+from prompt_library.simulation.engine import SimulationEngine
 from prompt_library.simulation.fingerprint import LibraryFingerprint
+from prompt_library.simulation.result import SimulationResult
+
 
 def test_simulation_generates_requested_number_of_prompts(tmp_path):
     category = tmp_path / "TEST"
@@ -35,8 +35,9 @@ def test_simulation_generates_requested_number_of_prompts(tmp_path):
     assert result.length_statistics.average_characters > 0
     assert result.length_statistics.shortest_characters > 0
     assert result.length_statistics.longest_characters >= (
-    result.length_statistics.shortest_characters
+        result.length_statistics.shortest_characters
     )
+
 
 def test_simulation_detects_duplicates(tmp_path):
     category = tmp_path / "TEST"
@@ -64,12 +65,15 @@ def test_simulation_detects_duplicates(tmp_path):
     assert result.unique_prompts == 1
     assert result.duplicate_prompts == 4
     assert result.duplicate_rate == 80.0
+
     assert result.length_statistics.average_characters == 20.0
     assert result.length_statistics.shortest_characters == 20
     assert result.length_statistics.longest_characters == 20
+
     assert result.duplicate_items == {
         "cute little dinosaur": 5,
     }
+
 
 def test_simulation_result_has_empty_category_coverage_by_default():
     engine_result = SimulationResult()
@@ -78,6 +82,8 @@ def test_simulation_result_has_empty_category_coverage_by_default():
     assert engine_result.category_coverage.used_entries == 0
     assert engine_result.category_coverage.coverage_percent == 0.0
     assert engine_result.category_coverage.files == {}
+
+
 def test_simulation_calculates_category_coverage(tmp_path):
     category = tmp_path / "TEST"
     category.mkdir()
@@ -112,6 +118,7 @@ def test_simulation_calculates_category_coverage(tmp_path):
         ].coverage_percent
         == 100.0
     )
+
     assert (
         result.category_coverage.files[
             "02_typ_postaci.txt"
@@ -133,6 +140,64 @@ def test_simulation_calculates_category_coverage(tmp_path):
         ].values()
     ) == 2
 
+    # Ta testowa kategoria ma tylko dwa pliki z oczekiwanych jedenastu.
+    assert result.category_structure.is_complete is False
+    assert result.category_structure.present_files == (
+        "01_character.txt",
+        "02_typ_postaci.txt",
+    )
+
+    assert result.category_structure.missing_files == (
+        "03_temat.txt",
+        "04_stroj.txt",
+        "05_poza.txt",
+        "06_akcja.txt",
+        "07_rekwizyt.txt",
+        "08_emocja.txt",
+        "09_kompozycja.txt",
+        "10_perspektywa.txt",
+        "11_tlo.txt",
+    )
+
+
+def test_simulation_detects_complete_category_structure(tmp_path):
+    category = tmp_path / "TEST"
+    category.mkdir()
+
+    filenames = (
+        "01_character.txt",
+        "02_typ_postaci.txt",
+        "03_temat.txt",
+        "04_stroj.txt",
+        "05_poza.txt",
+        "06_akcja.txt",
+        "07_rekwizyt.txt",
+        "08_emocja.txt",
+        "09_kompozycja.txt",
+        "10_perspektywa.txt",
+        "11_tlo.txt",
+    )
+
+    for filename in filenames:
+        (category / filename).write_text(
+            "test entry\n",
+            encoding="utf-8",
+        )
+
+    engine = SimulationEngine(str(tmp_path))
+
+    result = engine.simulate(
+        category="TEST",
+        count=1,
+        mode="random",
+        seed=0,
+    )
+
+    assert result.category_structure.is_complete is True
+    assert result.category_structure.present_files == filenames
+    assert result.category_structure.missing_files == ()
+
+
 def test_search_space_coverage_percent():
     result = SimulationResult(
         total_prompts=10,
@@ -143,6 +208,8 @@ def test_search_space_coverage_percent():
     )
 
     assert result.search_space_coverage_percent == 8.0
+
+
 def test_search_space_coverage_percent_for_empty_space():
     result = SimulationResult()
 

@@ -21,15 +21,41 @@ def build_simulation_report(result: SimulationResult) -> str:
         f"{result.length_statistics.shortest_characters}",
         f"Longest prompt: "
         f"{result.length_statistics.longest_characters}",
-        "",
-        "CATEGORY COVERAGE",
-        "────────────────────────────",
-        f"Entries used: "
-        f"{result.category_coverage.used_entries}"
-        f"/{result.category_coverage.total_entries}",
-        f"Coverage: "
-        f"{result.category_coverage.coverage_percent:.2f}%",
     ]
+
+    structure = result.category_structure
+
+    lines.extend(
+        [
+            "",
+            "CATEGORY STRUCTURE",
+            "────────────────────────────",
+            f"Status: "
+            f"{'COMPLETE' if structure.is_complete else 'INCOMPLETE'}",
+            f"Present files: "
+            f"{len(structure.present_files)}"
+            f"/{len(structure.expected_files)}",
+        ]
+    )
+
+    if structure.missing_files:
+        lines.append("Missing files:")
+
+        for filename in structure.missing_files:
+            lines.append(f"  - {filename}")
+
+    lines.extend(
+        [
+            "",
+            "CATEGORY COVERAGE",
+            "────────────────────────────",
+            f"Entries used: "
+            f"{result.category_coverage.used_entries}"
+            f"/{result.category_coverage.total_entries}",
+            f"Coverage: "
+            f"{result.category_coverage.coverage_percent:.2f}%",
+        ]
+    )
     
     fingerprint = result.library_fingerprint
     lines.extend(

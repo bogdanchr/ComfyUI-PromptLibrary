@@ -3,6 +3,7 @@ from .statistics import PromptLengthStatistics
 from .coverage import CategoryCoverage
 from .fingerprint import LibraryFingerprint
 from .usage import EntryUsageStatistics
+from .structure import CategoryStructureCheck
 
 @dataclass(slots=True)
 class SimulationResult:
@@ -21,6 +22,10 @@ class SimulationResult:
 
     category_coverage: CategoryCoverage = field(
     default_factory=CategoryCoverage
+    )
+
+    category_structure: CategoryStructureCheck = field(
+    default_factory=CategoryStructureCheck
     )
 
     library_fingerprint: LibraryFingerprint = field(

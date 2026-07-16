@@ -4,6 +4,7 @@ from .statistics import calculate_prompt_length_statistics
 from .coverage import calculate_category_coverage
 from .fingerprint import calculate_library_fingerprint
 from .usage import calculate_entry_usage
+from .structure import check_category_structure
 class SimulationEngine:
     """Generuje wiele promptów przy użyciu tego samego silnika co Prompt Library."""
 
@@ -43,6 +44,10 @@ class SimulationEngine:
             ]
             used_by_file[path.name] = []
 
+        result.category_structure = check_category_structure(
+        list(available_by_file)
+    )
+        
         prompts: list[str] = []
 
         for offset in range(count):
