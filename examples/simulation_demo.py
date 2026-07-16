@@ -1,7 +1,6 @@
 from pathlib import Path
 
-from prompt_library.simulation.engine import SimulationEngine
-from prompt_library.simulation.report import build_simulation_report
+from prompt_library.simulation import Simulation
 
 
 LIBRARY_ROOT = Path(r"D:\PromptLibrary\Kolorowanki")
@@ -14,21 +13,23 @@ def main() -> None:
             f"Library folder does not exist: {LIBRARY_ROOT}"
         )
 
-    engine = SimulationEngine(str(LIBRARY_ROOT))
+    simulation = Simulation(LIBRARY_ROOT)
 
-    result = engine.simulate(
+    result = simulation.run(
         category=CATEGORY,
         count=1000,
         mode="random",
         seed=1000,
     )
 
-    report = build_simulation_report(result)
+    report = simulation.report(result)
 
     print(report)
 
-    output_path = Path("simulation_report.txt")
-    output_path.write_text(report, encoding="utf-8")
+    output_path = simulation.save_report(
+        result,
+        Path("simulation_report.txt"),
+    )
 
     print()
     print(f"Report saved to: {output_path.resolve()}")
