@@ -71,9 +71,7 @@ def calculate_category_coverage(
             unused_by_file[filename] = file_coverage.unused_entries
 
     coverage_percent = (
-        round(used_entries / total_entries * 100, 2)
-        if total_entries
-        else 0.0
+        round(used_entries / total_entries * 100, 2) if total_entries else 0.0
     )
 
     return CategoryCoverage(
