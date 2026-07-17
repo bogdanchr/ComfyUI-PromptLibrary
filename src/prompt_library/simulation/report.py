@@ -1,0 +1,132 @@
+from .result import SimulationResult
+
+
+def build_simulation_report(result: SimulationResult) -> str:
+    """Buduje czytelny raport tekstowy z wyniku symulacji."""
+
+    lines = [
+        "PROMPT SIMULATION",
+        "════════════════════════════",
+        "",
+        f"Generated prompts: {result.total_prompts}",
+        f"Unique prompts: {result.unique_prompts}",
+        f"Duplicate prompts: {result.duplicate_prompts}",
+        f"Duplicate rate: {result.duplicate_rate:.2f}%",
+        "",
+        "PROMPT LENGTH",
+        "────────────────────────────",
+        f"Average characters: "
+        f"{result.length_statistics.average_characters}",
+        f"Shortest prompt: "
+        f"{result.length_statistics.shortest_characters}",
+        f"Longest prompt: "
+        f"{result.length_statistics.longest_characters}",
+    ]
+
+    structure = result.category_structure
+
+    lines.extend(
+        [
+            "",
+            "CATEGORY STRUCTURE",
+            "────────────────────────────",
+            f"Status: "
+            f"{'COMPLETE' if structure.is_complete else 'INCOMPLETE'}",
+            f"Present files: "
+            f"{len(structure.present_files)}"
+            f"/{len(structure.expected_files)}",
+        ]
+    )
+
+    if structure.missing_files:
+        lines.append("Missing files:")
+
+        for filename in structure.missing_files:
+            lines.append(f"  - {filename}")
+
+    lines.extend(
+        [
+            "",
+            "CATEGORY COVERAGE",
+            "────────────────────────────",
+            f"Entries used: "
+            f"{result.category_coverage.used_entries}"
+            f"/{result.category_coverage.total_entries}",
+            f"Coverage: "
+            f"{result.category_coverage.coverage_percent:.2f}%",
+        ]
+    )
+    
+    fingerprint = result.library_fingerprint
+    lines.extend(
+        [
+            "",
+            "LIBRARY FINGERPRINT",
+            "────────────────────────────",
+            f"Prompt files: {fingerprint.files_count}",
+            f"Total entries: {fingerprint.total_entries}",
+            f"Possible combinations: "
+            f"{fingerprint.possible_combinations:,}",
+            f"Search space covered: "
+            f"{result.search_space_coverage_percent:.6f}%",
+            f"Average entries per file: "
+            f"{fingerprint.average_entries_per_file}",
+            f"Smallest file: {fingerprint.smallest_file_size}",
+            f"Largest file: {fingerprint.largest_file_size}",
+        ]
+    )
+
+    if result.category_coverage.files:
+        lines.extend(
+            [
+                "",
+                "FILES",
+                "────────────────────────────",
+            ]
+        )
+
+        for filename, file_coverage in (
+            result.category_coverage.files.items()
+        ):
+            lines.append(
+                f"{filename}: "
+                f"{file_coverage.used_entries}"
+                f"/{file_coverage.total_entries} "
+                f"({file_coverage.coverage_percent:.2f}%)"
+            )
+
+    if result.entry_usage.usage_by_file:
+        lines.extend(
+            [
+                "",
+                "MOST USED ENTRIES",
+                "────────────────────────────",
+            ]
+        )
+
+        for filename, entry_counts in (
+            result.entry_usage.usage_by_file.items()
+        ):
+            lines.append(filename)
+
+        for entry, count in list(entry_counts.items())[:3]:
+            lines.append(f"  {entry}: {count}")
+
+    if result.category_coverage.unused_entries:
+        lines.extend(
+            [
+                "",
+                "UNUSED ENTRIES",
+                "────────────────────────────",
+            ]
+        )
+
+        for filename, entries in (
+            result.category_coverage.unused_entries.items()
+        ):
+            lines.append(filename)
+
+            for entry in entries:
+                lines.append(f"  - {entry}")
+
+    return "\n".join(lines)

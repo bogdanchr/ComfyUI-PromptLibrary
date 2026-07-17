@@ -11,4 +11,4 @@ Thumbs.db
 data/state/*.json
 !data/state/.gitkeep
 simulation_report.txt
-src/comfyui_promptlibrary.egg-info/
+*.egg-info/
