@@ -23,6 +23,9 @@ class DoctorEngine:
         result = DoctorResult()
 
         for rule in self._rules:
+            if not rule.enabled:
+                continue
+
             findings = rule.evaluate(simulation_result)
             result.extend(findings)
 

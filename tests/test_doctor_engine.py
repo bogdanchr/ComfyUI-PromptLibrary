@@ -8,9 +8,9 @@ from prompt_library.simulation import SimulationResult
 
 
 class EmptyRule(DoctorRule):
-    @property
-    def name(self) -> str:
-        return "Empty rule"
+    rule_id = "empty"
+    name = "Empty rule"
+    description = "Nie zwraca żadnych diagnoz."
 
     def evaluate(
         self,
@@ -20,9 +20,9 @@ class EmptyRule(DoctorRule):
 
 
 class WarningRule(DoctorRule):
-    @property
-    def name(self) -> str:
-        return "Warning rule"
+    rule_id = "warning"
+    name = "Warning rule"
+    description = "Zwraca przykładowe ostrzeżenie."
 
     def evaluate(
         self,
@@ -39,9 +39,9 @@ class WarningRule(DoctorRule):
 
 
 class ErrorRule(DoctorRule):
-    @property
-    def name(self) -> str:
-        return "Error rule"
+    rule_id = "error"
+    name = "Error rule"
+    description = "Zwraca przykładowy błąd."
 
     def evaluate(
         self,
@@ -119,3 +119,22 @@ def test_doctor_engine_keeps_rule_order() -> None:
         warning_rule,
         error_rule,
     )
+
+
+def test_doctor_engine_skips_disabled_rules() -> None:
+    enabled_rule = WarningRule()
+    disabled_rule = ErrorRule(enabled=False)
+
+    engine = DoctorEngine(
+        [
+            enabled_rule,
+            disabled_rule,
+        ]
+    )
+
+    result = engine.diagnose(SimulationResult())
+
+    assert result.total_findings == 1
+    assert result.warning_count == 1
+    assert result.error_count == 0
+    assert result.findings[0].code == "example_warning"

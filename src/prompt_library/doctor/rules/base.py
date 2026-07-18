@@ -6,17 +6,18 @@ from ..finding import DoctorFinding
 
 
 class DoctorRule(ABC):
-	"""Wspólny interfejs wszystkich reguł Prompt Doctora."""
+    """Wspólny interfejs wszystkich reguł Prompt Doctora."""
 
-	@property
-	@abstractmethod
-	def name(self) -> str:
-		"""Czytelna nazwa reguły."""
+    rule_id: str
+    name: str
+    description: str
 
-	@abstractmethod
-	def evaluate(
-		self,
-		simulation_result: SimulationResult,
-	) -> list[DoctorFinding]:
-		"""Analizuje wynik symulacji i zwraca diagnozy."""
+    def __init__(self, enabled: bool = True) -> None:
+        self.enabled = enabled
 
+    @abstractmethod
+    def evaluate(
+        self,
+        simulation_result: SimulationResult,
+    ) -> list[DoctorFinding]:
+        """Analizuje wynik symulacji i zwraca diagnozy."""
